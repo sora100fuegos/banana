@@ -160,13 +160,15 @@ public class Loguear extends HttpServlet {
         }
 
         //Escribir el JSON
-        try (PrintWriter out = response.getWriter()) {
+        try (PrintWriter salida = response.getWriter()) {
         	
         	System.out.println(jsonResult);
             /* TODO output your page here. You may use following sample code. */
-            out.print(jsonResult);
+            salida.print(jsonResult);
             
-            response.setContentType("application/json");
+           // response.setContentType("application/json");
+            
+            //response.setContentType("application/json");
         }
 	}
 
