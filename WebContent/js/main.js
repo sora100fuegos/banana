@@ -1,5 +1,4 @@
-
-		
+	
 		$(document).ready( function()
 		
 		{
@@ -30,7 +29,7 @@
         {       	
         	
         
-       alert('usuario  logueado  correctamente ');
+     
         
         var logueo = {
                 
@@ -54,9 +53,29 @@
             //Servlet existe y me devolvió un JSON
             success: function (data, textStatus, jqXHR) {
                 console.log("Si el acceso al servlet fue correcto");
-                console.log(data.content);
+                console.log(data.control);
+                
+                
+                if(data.control==0)
+                	
+                	
+                	{
+                	 
+                	
+                	  alert('upring suario  logueado  correctamente ');
+                	  
+                	  window.location.replace("http://localhost:8080/manzana/Loguear/dashboardNuevo.html");
+                	
+                	}
+                
+                else
+                	
+                	{
+                	 alert("   el  correo  es invalido o la contraseña  estan escritas incorrectamente o   el usuario  no esta registrado en el sistema ");
+                	    
+                	}
 
-                //Insertar nueva publicacion  con el  boton de  eliminar y modificar 
+                
                 
 
             },
@@ -69,7 +88,7 @@
 
         //Si la publicacion está vacía
     } else {
-        alert("Agrega texto no seas flojo");
+        alert("   el  correo  es invalido o la contraseña  estan escritas incorrectamente o   el usuario  no esta registrado en el sistema ");
     }
 
 
@@ -88,7 +107,7 @@ $("button#boton2").on(//  selecciona el boton al hacer click
     function(event)
 
     {
-    	console.clear();
+    	//console.clear();
     	console.log("entro");
         var nombre2 =  $('#nombre').val();
         var correo2 = $("#correo2").val();
@@ -96,34 +115,22 @@ $("button#boton2").on(//  selecciona el boton al hacer click
 
         var testEmail =  /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
 
-        console.log("contenido",nombre2);
-       
-
-        console.log("contenido", correo2);
-
-        console.log("contenido", password2);
-
-//console.log("la salida  es",testEmail.test(correo));
         if(nombre2!=""  &&  correo2  !="" && password2!="" && testEmail.test(correo2))
         
         {
         
-        	
-        	alert('el usuario se registro  corrctamente');
         
         var nusuario = {
             
             // numero:$("nusuario").length+1,
                 nnombre :nombre2,
                 ccorreo :correo2,
-                ppassword:password2
+                ppassword :password2
                 
-             };
+                 };
         
      
-        data: JSON.stringify(nusuario),
-
-        
+            
     	
         ///  enviar  el  registro  al srvlet conexin y desde ahi guardarlo en la base de datos 
         $.ajax({
@@ -133,7 +140,7 @@ $("button#boton2").on(//  selecciona el boton al hacer click
             contentType: "application/json",
             //Que tipo de datos te voy a enviar
             dataType: "json",
-           data: JSON.stringify(nusuario),
+           data : JSON.stringify(nusuario),
            // data: JSON.stringify(nuevaPublicacion),
             //Servlet existe y me devolvió un JSON
             
@@ -142,18 +149,22 @@ $("button#boton2").on(//  selecciona el boton al hacer click
             success: function (data, textStatus, jqXHR) {
             	
             	
-            	   alert('usuario  registrado');
+            	  
                console.log("Si el acceso al servlet fue correcto");
                console.log("todo esta  correcto");
-               console.log(data.mensaje);
-                
-            //    console.log("  el  nombre  del usuario  registrado es"+data.nnombre);
-                
-               // console.log(data.Id_usuario);
-                ///console.log(data.ppassword);
-                //console.log(data.uusuario);
-                //Insertar nueva publicacion
-              
+               console.log(JSON.stringify(data));
+              if(data.control==1)
+            	  
+            	  {
+            	  
+            	  alert("se  regitro el usuario  correctamente ");
+            	  
+            	  }
+              else
+            	  {
+            	  alert("no se  pudo  introducir el usuario  porque   el correo   ya existe ");
+            	  
+            	  }
                
                
             },
@@ -161,6 +172,8 @@ $("button#boton2").on(//  selecciona el boton al hacer click
                 console.log(jqXHR);
                 console.log("eroror");
                console.log(errorThrown);
+               
+               //console.log("Si el acceso al servlet fue correcto");
             }
         
 

@@ -55,17 +55,10 @@ public class conexion extends HttpServlet {
         
         
 		
-	
-        
+	       
        System.out.println(jsonResult);
         
-        Connection con = conectar();
         
-        //System.out.println("Hola");
-        
-        if (con != null) {
-            
-            //System.out.println("Estoy conectado");
             
             //Send request reader and get
         	 JsonObject obtencion = JSONPost.getJsonObject( //obtiene objetos
@@ -76,84 +69,99 @@ public class conexion extends HttpServlet {
             String  nombre= obtencion.get("nnombre").getAsString();
             String  correo = obtencion.get("ccorreo").getAsString();
             String  password = obtencion.get("ppassword").getAsString();
+                   
+            funciones  conectar = new funciones ();
             
-            //System.out.println(id);
-            //System.out.println(contenido);
-            
-            String query = "INSERT INTO usuarios(nombre,correo,contrasena) " + 
-                           "VALUES('" + nombre+ "',  '" + correo + "', '" + password + "')";
-            
-            System.out.println(query);
-            
-            
-            
-            try {
-                
-                //Consulta
-                Statement insercion = (Statement) con.createStatement();
-                //Insercion
-                insercion.executeUpdate(query);//  esta linea ejecuta   el query en la base de datos 
+            String mensaje="se  introdujo correctamnete el  usuario";
+  
+          if(conectar.buscarbd(correo)==true)
+          {
+                  jsonResult = "{" +
+                                 //   "\"id\":\"" + Idusuario +"\"," +
+                                 //   "\"content\":\"" + uusuario +"\"," +
+                                 //   "\"control\":\"" + correobd +"\"" +
+                                    "\"control\":\"" + 0  +"\""
+                                + "}";
+                  
+                    	System.out.println("el usuario  duplicado "+jsonResult);
+                    	try (PrintWriter out = response.getWriter()) {
+                            /* TODO output your page here. You may use following sample code. */
+                      	  System.out.println(jsonResult);
+                            out.print(jsonResult);
+                            
+                            response.setContentType("application/json");
+                        }
+          }
+                   
+          else  	
+                    {
+        	  
+        	  
+        	  
+        	    
+              jsonResult = "{" +
+                      
+                         "\"control\":\"" + 1  +"\""
+                     + "}";
+       
+              
+              
+              try (PrintWriter out = response.getWriter()) {
+                  /* TODO output your page here. You may use following sample code. */
+            	  System.out.println(jsonResult);
+                  out.print(jsonResult);
+                  
+                  response.setContentType("application/json");
+              }
                 
               
-                String mensaje="se  introdujo correctamnete el  usuario";
-                con.close();
-                
-                //json que sera  devuelto  a javascript
-                
-               
-
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-        }
+       	   String query = "INSERT INTO usuarios(nombre,correo,contrasena) " + 
+                   "VALUES('" + nombre+ "',  '" + correo + "', '" + password + "')";
+    
+    System.out.println(query);
+    
+    
+    //Statement insercion = (Statement) con.createStatement();
+    //Insercion
+    Connection con = conectar.conectar();
+    
+    
+    Statement insercion;
+	try {
+		insercion = (Statement) con.createStatement();
+		
+		insercion.executeUpdate(query);//  esta linea ejecuta   el query en la base de datos
+		
+		 con.close();
+		 
+		 System.out.println(mensaje);
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		System.out.println("Fallo");
+	}
+             
+              	
+              }
+              
+          
+                    	///  si no haya  el  dato en la base de datos devuelbe  el  mesaje  ue no se encontro 
+                    	
+                    
+                 
+          
+       
         
+	}
         
 
         //Escribir el JSON
-        try (PrintWriter out = response.getWriter()) {
-            
-                 out.print(jsonResult);
-            
-            response.setContentType("application/json");
-            
-        }
+    
+        
 	}
 
 	
 	
 	///  se conecta  a la base de  datos    de manzana  e inserta  los datos   del  registro
-	public Connection conectar()  
-    {
-        Connection conn1 = null;
-        try{
-           
+	
 
-        	
-        	System.out.println("ya entro");
-        	
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            
-            String stringConnection = "jdbc:mysql://localhost:3306/manzana?useSSL=true";
-            conn1 = DriverManager.getConnection(stringConnection,"root","100fuegos");
-            
-            
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return conn1;
-    }
-	
-	
-}
